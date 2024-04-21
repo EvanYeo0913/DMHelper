@@ -1,4 +1,19 @@
 package com.evanyeomans.dmhelper.data
 
-class RoomDAO {
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.evanyeomans.dmhelper.models.ItemEntity
+import kotlinx.coroutines.flow.Flow
+
+// Data access object
+@Dao
+interface RoomDAO {
+    // add item to database, return if added, null if failed
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addItem(item: ItemEntity)
+
+    @Query("SELECT * FROM item_table")
+    fun getAll(): Flow<List<ItemEntity>>
 }
