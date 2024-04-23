@@ -16,4 +16,10 @@ interface RoomDAO {
 
     @Query("SELECT * FROM item_table")
     fun getAll(): Flow<List<ItemEntity>>
+
+    @Query("SELECT * FROM item_table ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandom(): ItemEntity
+
+    @Query("SELECT * FROM item_table WHERE name LIKE '%' || :name || '%'")
+     fun searchName(name: String): Flow<List<ItemEntity>>
 }

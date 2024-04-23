@@ -2,7 +2,7 @@ package com.evanyeomans.dmhelper.models
 
 enum class Type {
     Armor,
-    Item,
+    Weapon,
     Ring,
     Wand,
 }

@@ -42,14 +42,6 @@ fun ViewAllScreen(navController: NavController, viewModel: ViewModelRoom) {
                 .padding(bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Header for each column
-//            repeat(4) {
-//                Text(
-//                    text = "c ${it + 1}",
-//                    modifier = Modifier.weight(1f),
-//                    style = MaterialTheme.typography.titleMedium
-//                )
-//            }
             Text(text = "Name", modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.titleMedium)
             Text(text = "Cost", modifier = Modifier.weight(1f),

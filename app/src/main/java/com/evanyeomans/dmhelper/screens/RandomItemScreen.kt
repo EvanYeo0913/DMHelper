@@ -1,23 +1,17 @@
 package com.evanyeomans.dmhelper.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,71 +20,59 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.evanyeomans.dmhelper.data.ViewModelRoom
 import com.evanyeomans.dmhelper.models.ItemModel
-import com.evanyeomans.dmhelper.models.Rarity
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnrememberedMutableState")
 @Composable
-fun RandomItemScreen(navController: NavController){
-    var isExpanded by remember{mutableStateOf(false)}
+fun RandomItemScreen(navController: NavController, viewModel: ViewModelRoom){
+    var item by remember { mutableStateOf<ItemModel?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
     ) {
-        // First Row: Two Text Fields
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp),
-                label = { Text("Min Cost") },
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
-            )
-
-            TextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp),
-                label = { Text("Max Cost") },
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
-            )
-        }
-        Spacer(modifier = Modifier.height(80.dp))
-
-            ExposedDropdownMenuBox(
-                expanded = isExpanded,
-                onExpandedChange = { isExpanded = it }, // Directly assign the new value
-                modifier = Modifier.fillMaxWidth() // Add modifier for width
-            ) {
-                Column {
-                    ExposedDropdownMenu(
-                        expanded = isExpanded,
-                        onDismissRequest = { isExpanded = false }, // Directly assign false
-                        modifier = Modifier.fillMaxWidth() // Add modifier for width
-                    ) {
-                        // Dropdown Menu Items
-                        DropdownMenuItem(onClick = { /*TODO*/ }, text = {Text(text = "Item")})
-                    }
+        Button(
+            onClick = {
+                isLoading = true // Set loading state to true
+                viewModel.getRandom() { randomItem ->
+                    item = randomItem
+                    isLoading = false // Set loading state to false when query completes
                 }
-            }
-
-        Button(onClick={}, modifier = Modifier.padding(16.dp)){
+            },
+            modifier = Modifier.padding(16.dp)
+        ) {
             Text("Generate")
         }
 
-    }
-
-}
+        // Show loading indicator if isLoading is true
+        if (isLoading) {
+            CircularProgressIndicator() // Add CircularProgressIndicator while loading
+        } else {
+            item?.let { generatedItem ->
+                // Display the generated item UI
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Random Item", style = MaterialTheme.typography.titleMedium)
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .border(1.dp, Color.Gray)
+                ) {
+                    Column(modifier = Modifier.padding(4.dp)) {
+                        Text("Name: ${generatedItem.name}")
+                        Text("Cost: ${generatedItem.cost.toString()}")
+                        Text("Type: ${generatedItem.type.toString()}")
+                        Text(text = generatedItem.rarity.toString())
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(text = generatedItem.description)
+                    }
+                }
+            }
+        }
+    } // end column
+} // end fun

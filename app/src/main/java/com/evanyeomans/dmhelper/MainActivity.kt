@@ -39,6 +39,7 @@ import com.evanyeomans.dmhelper.models.ScreenInfo
 import com.evanyeomans.dmhelper.screens.AddItemScreen
 import com.evanyeomans.dmhelper.screens.HomeScreen
 import com.evanyeomans.dmhelper.screens.RandomItemScreen
+import com.evanyeomans.dmhelper.screens.SearchScreen
 import com.evanyeomans.dmhelper.screens.ViewAllScreen
 import com.evanyeomans.dmhelper.ui.theme.DMHelperTheme
 
@@ -84,13 +85,13 @@ private fun MainApp(){
             "Random",
             "Random Item",
             Icons.Default.Refresh,
-            composable = { RandomItemScreen(navController)}
+            composable = { RandomItemScreen(navController, viewModel)}
         ),
         ScreenInfo(
             "Search",
             "Search Item",
             Icons.Default.Search,
-            composable ={}
+            composable ={ SearchScreen(viewModel)}
         ),
         ScreenInfo(
             "Add Item",

@@ -155,6 +155,7 @@ fun AddItemScreen(navController: NavController, viewModel: ViewModelRoom) {
                 selectedType
             )
             viewModel.addItem(item.toModel())
+            navController.navigate("View All")
         })
         {
             Text("Submit")
